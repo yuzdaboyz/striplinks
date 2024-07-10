@@ -1,7 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
 
 Public Class frmLinks
-    Public Shared URL As New Regex("(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])", RegexOptions.Compiled)
+    Public Shared URL As New Regex("(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#()]*[\w\-\@?^=%&amp;/~\+#()])", RegexOptions.Compiled)
     Public FileTypes As Array = My.Settings.FileTypes.Split(" ")
     ' Public FileTypes As Array = {".rar", ".zip", ".7z", ".exe"}
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -16,17 +16,24 @@ Public Class frmLinks
         Dim lnk As New List(Of String)
         Dim files As Array = FileTypes
 
-        For Each ele In URL.Matches(clips)
-            For Each item In files
-                If ele.ToString().ToLower.Contains("." & item.ToString.ToLower) And Not ele.ToString().Contains("...") Then
-                    lnk.Add(ele.ToString())
-                End If
+        Try
+
+
+
+            For Each ele In URL.Matches(clips)
+                For Each item In files
+                    If ele.ToString().ToLower.Contains("." & item.ToString.ToLower) And Not ele.ToString().Contains("...") Then
+                        lnk.Add(ele.ToString())
+                    End If
+                Next
             Next
-        Next
 
-        'remove duplicates
-        lnk = lnk.Distinct.ToList
+            'remove duplicates
+            lnk = lnk.Distinct.ToList
 
+        Catch ex As Exception
+            Debug.Print(ex.Message.ToString())
+        End Try
 
         Return lnk
     End Function
